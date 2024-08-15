@@ -35,11 +35,13 @@ app.get("/",async(req,res)=>{
 
 app.post("/addTask",async(req,res)=>{
     try {
-        const addTask = await ToDoApp.create({
+        const insertData = {
             task : req.body.task,
-            status : "Not Started",
+            status : req.body.status ? req.body.status : "Not Started",
             deadline : req.body.deadline
-        });
+        }
+        let addTask = new ToDoApp(insertData)
+        addTask = await addTask.save();
         if(addTask.task && addTask.status){
             res.send({
                 message : "Details added successfully!"
@@ -48,9 +50,9 @@ app.post("/addTask",async(req,res)=>{
             res.status(400);
             res.send({ message : "Unknown Error Occurred"});
         }
-        res.send(addTask);
     } catch (error) {
         console.log("Error Occured while add task : "+error);
+        res.status(500);
         res.send({
             message : "Internal Server Error",
             detailError : error
@@ -58,9 +60,14 @@ app.post("/addTask",async(req,res)=>{
     }
 });
 
-app.put("/updateStatus/:id",async(req,res)=>{
+app.put("/update/:id",async(req,res)=>{
     try {
-        const updateStatus = await ToDoApp.updateOne({_id : req.params.id},{$set:{status : req.body.status}});
+        const updateBody = {
+            task : req.body.task,
+            status : req.body.status,
+            deadline : req.body.deadline
+        }
+        const updateStatus = await ToDoApp.updateOne({_id : req.params.id},{$set:updateBody});
         if(updateStatus.acknowledged) {
             res.send({message : `${updateStatus.modifiedCount} Data Updated Successfully`});            
         }else{
@@ -70,6 +77,7 @@ app.put("/updateStatus/:id",async(req,res)=>{
         
     } catch (error) {
         console.log("Error Occured while updating : "+error);
+        res.status(500);
         res.send({
             message : "Internal Server Error",
             detailError : error
@@ -88,6 +96,7 @@ app.delete("/removeTask/:id",async(req,res)=>{
         }
     } catch (error) {
         console.log("Error Occured while Deleting : "+error);
+        res.status(500);
         res.send({
             message : "Internal Server Error",
             detailError : error
