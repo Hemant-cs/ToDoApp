@@ -1,0 +1,23 @@
+{
+  "name": "to-do-app-backend",
+  "version": "1.0.0",
+  "description": "backend of to do app",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hemant-cs/ToDoApp"
+  },
+  "keywords": [
+    "ToDoApp"
+  ],
+  "author": "HemantCS",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.3"
+  }
+}
